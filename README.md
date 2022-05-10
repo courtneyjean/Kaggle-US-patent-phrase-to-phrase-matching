@@ -1,13 +1,13 @@
-* Kaggle Comp: U.S. Patent Phrase to Phrase Matching: Evaluating approaches for natural language text similarity
+# Kaggle Comp: U.S. Patent Phrase to Phrase Matching: Evaluating approaches for natural language text similarity
 
 May 2022
 
-** INTRODUCTION
+## INTRODUCTION
 The recent Kaggle competition “U.S. Patent Phrase to Phrase Matching” asks competitors to train models to match key phrases in patient documents and score the semantic similarity of the text.  Whilst the competition winners will likely use state of the art and computational heavy transformers, I wanted to use the competition to apply some common NLP approaches and evaluate their relative performance. 
 
 More information on this competition can be found here: https://www.kaggle.com/competitions/us-patent-phrase-to-phrase-matching/overview
 
-** SETUP
+## SETUP
 
 I've utilised the file structure suggested in "Approaching (almost) any machine learning problem" by Abhishek Thakur, which provides an intuitive project structure for building and evaluating machine learning models.
 
@@ -16,7 +16,7 @@ A virtual environment for running this project is included in the environment.ym
 To create this environment, run: conda env create -f environment.yml
 To activate this environment, run: conda activate phrase_match
 
-** TARGET
+## TARGET
 
 In this competition, the aim is to predict the similarity score between two phrases.  I will treat this as a classification
 problem, with the potential options being the following:
@@ -27,7 +27,7 @@ problem, with the potential options being the following:
 0.25 - Somewhat related, e.g. the two phrases are in the same high level domain but are not synonyms. This also includes antonyms.
 0.0 - Unrelated.
 
-** MODEL EVALUATION 
+## MODEL EVALUATION 
 
 The model will be evaluated using a stratified k fold cross validation approach, to ensure that an equal number of each of the 
 classification scores above is represented in each fold.  The stratified fold approach is created in src/create_folds.py
@@ -36,7 +36,7 @@ The competition metric used to evaluate submissions is pearson's coefficient, wh
 1 to indicate the similarity between the predicted and actual scores. I'm calculating this using the scipy implementations of 
 pearson's coefficient.
 
-** PREPROCESSING
+## PREPROCESSING
 
 CONTEXT: The competition data includes the Cooperative Patent Classification (CPC) code, and advises that the similarity 
 of the text should be considered within the patients "contex".  To ensure that the text similarity methods I am using also
