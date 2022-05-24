@@ -27,15 +27,6 @@ problem, with the potential options being the following:
 0.25 - Somewhat related, e.g. the two phrases are in the same high level domain but are not synonyms. This also includes antonyms.
 0.0 - Unrelated.
 
-## MODEL EVALUATION 
-
-The model will be evaluated using a stratified k fold cross validation approach, to ensure that an equal number of each of the 
-classification scores above is represented in each fold.  The stratified fold approach is created in src/create_folds.py
-
-The competition metric used to evaluate submissions is pearson's coefficient, which outputs a single number between -1 and
-1 to indicate the similarity between the predicted and actual scores. I'm calculating this using the scipy implementations of 
-pearson's coefficient.
-
 ## PREPROCESSING
 
 CONTEXT: The competition data includes the Cooperative Patent Classification (CPC) code, and advises that the similarity 
@@ -45,27 +36,40 @@ two lookup tables that I've added to the input folder.  Code to create these (an
 is here: notebooks/EDA_context_CPC_Codes.ipynb.  In the transform variables script, I've imported the descriptions into 
 the train file.
 
-INPUTS: I've settled on the approach of simplifying the input text to be in the format: context_text + anchor_text + target
+INPUTS: I experimented with two approaches:
+1) Two input vectors of context_text + target and anchor_text + target, joined horiziontally.  
+2) Single input text vector to be in the following format: context_text + anchor_text + target.  
 
-TARGET: I'm approaching the problem as a multi-class classification, where the aim is to predict the score as one of 
-5 categories (see target).  To support this, I'm converting the target column from scores 0-1, to 0-4.
+## TOKENISATION AND EMBEDDINGS
+Machine learning algorthims require natural language (ie text) to be converted to numerical values.  I've experimented with two different approaches:
+1) Bag of Words approach using Sklearn's CountVectorisation method
+2) Pretrained FastText word embeddings: a pretrained model that produces vectors representing the n-grams present in the text 
 
+## MODEL EVALUATION 
 
+The model will be evaluated using a stratified k fold cross validation approach, to ensure that an equal number of each of the 
+classification scores above is represented in each fold.  The stratified fold approach is created in src/create_folds.py
 
+The competition metric used to evaluate submissions is pearson's coefficient, which outputs a single number between -1 and
+1 to indicate the similarity between the predicted and actual scores. I'm calculating this using the scipy implementations of 
+pearson's coefficient.
 
+### Comparing default implementations of simple models
 
+To begin with, I ran a couple of experiments to gather a performance baseline for the various preprocessing options and the default implementations of different algorthimic approaches.
 
+| Preprocessing | Tokenisation | Model | Pearson's Coefficient |
+|--|--|--|--:|
+|Two input vectors| Bag of Words | Logistic Regression | 0.2531|
+|Two input vectors| Bag of Words | Decision Tree | 0.3464|
+|Two input vectors| Bag of Words | XGBoost| 0.2403|
+|Two input vectors + stemming| FastText | Logistic Regression | 0.0175|
+|Two input vectors + stemming| FastText | Decision Tree | 0.0132|
+|Two input vectors + stemming| FastText | XGBoost| 0.0184|
+|Single input vector| FastText | Logistic Regression | 0.3015|
+|Single input vector| FastText | Decision Tree | 0.1101|
+|Single input vector| FastText | XGBoost| 0.1450|
+|Single input vector| Bag of Words | Decision Tree | 0.3303|
 
-
-
-
-
-
-
-
-
-
-
-
-
+From this I could see that the stemming didn't appear to be helping the preprocessing, so I removed it from preprocessing.  The tree models (DecisionTree and XGBoost) appeared to be doing best, and within the performance of these models, there wasn't much difference between using teh bag of words approach, or the FastText approach.  I decided to proceed with the FastText approach, as it was quicker.
 
