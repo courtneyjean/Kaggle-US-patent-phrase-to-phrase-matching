@@ -70,6 +70,45 @@ To begin with, I ran a couple of experiments to gather a performance baseline fo
 |Single input vector| FastText | Decision Tree | 0.1101|
 |Single input vector| FastText | XGBoost| 0.1450|
 |Single input vector| Bag of Words | Decision Tree | 0.3303|
+|Single input vector| FastText | Random Forrest | 0.1101|
+|Single input vector| FastText | LightGBM | 0.1450|
 
-From this I could see that the stemming didn't appear to be helping the preprocessing, so I removed it from preprocessing.  The tree models (DecisionTree and XGBoost) appeared to be doing best, and within the performance of these models, there wasn't much difference between using teh bag of words approach, or the FastText approach.  I decided to proceed with the FastText approach, as it was quicker.
+From this I could see that the stemming didn't appear to be helping the preprocessing, so I removed it from preprocessing.  The tree models (DecisionTree, XGBoost, Random Forrest and LightGBM) appeared to be doing best, and within the performance of these models, there wasn't much difference between using teh bag of words approach, or the FastText approach.  I decided to proceed with the FastText approach, as it was quicker.
 
+### Hyperparameter tunning XGBoost
+Based on the inital results, I decided to continue to experiment with XGBoost, and tune the hyperparameters to attempt to improve performance.
+For these experiments, I preprocessed the text with the single input vector approach described above, and used FastText Embeddings
+
+| eta   | max depth | n_estimators | gamma | min_child_weight | Persons Coefficient |
+|------:|:-----------:|:------------:|-------:|:------------------:|---------------------:|
+| 0.001 | 3         | 100          | 0     | 1                | 0.0440              |
+| 0.001 | 6         | 100          | 0     | 1                | 0.1190              |
+| 0.001 | 9         | 100          | 0     | 1                | 0.1872              |
+| 0.06  | 3         | 100          | 0     | 1                | 0.0882              |
+| 0.06  | 6         | 100          | 0     | 1                | 0.1876              |
+| 0.06  | 9         | 100          | 0     | 1                | 0.2823              |
+| 0.1   | 3         | 100          | 0     | 1                | 0.1124              |
+| 0.1   | 6         | 100          | 0     | 1                | 0.2324              |
+| 0.1   | 9         | 100          | 0     | 1                | 0.3121              |
+| 0.2   | 3         | 100          | 0     | 1                | 0.1588              |
+| 0.2   | 6         | 100          | 0     | 1                | 0.2796              |
+| 0.2   | 9         | 100          | 0     | 1                | 0.3486              |
+| 0.3   | 3         | 100          | 0     | 1                | 0.1833              |
+| 0.3   | 6         | 100          | 0     | 1                | 0.3015              |
+| 0.3   | 9         | 100          | 0     | 1                | 0.3580              |
+| 0.3   | 12        | 100          | 0     | 1                | 0.3847              |
+| 0.4   | 9         | 100          | 0     | 1                | 0.3623              |
+| 0.4   | 9         | 200          | 0     | 1                | 0.3998              |
+| 0.4   | 12        | 200          | 0     | 1                | 0.4117              |
+| 0.4   | 15        | 400          | 0     | 1                | 0.4304              |
+| 0.4   | 15        | 800          | 0     | 1                | 0.4344              |
+| 0.4   | 15        | 1000         | 0     | 1                | 0.4373              |
+| 0.4   | 20        | 1000         | 0     | 1                | 0.4341              |
+| 0.4   | 20        | 2000         | 0     | 1                | 0.4411              |
+| 0.4   | 25        | 400          | 0     | 1                | 0.4228              |
+| 0.4   | 15        | 800          | 0.1   | 1                | 0.3528              |
+| 0.4   | 15        | 800          | 0.5   | 1                | 0.3073              |
+| 0.4   | 15        | 800          | 0.9   | 1                | 0.3003              |
+| 0.4   | 15        | 800          | 0     | 1                | 0.4344              |
+| 0.4   | 15        | 800          | 0     | 2                | 0.4331              |
+| 0.4   | 15        | 800          | 0     | 6                | 0.4333              |
